@@ -1,0 +1,23 @@
+# Large / local generated directories
+torch/
+outputs/
+dataset/
+logs/
+checkpoints/
+.threestudio_cache/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Build artifacts
+*.so
+
+# Editors
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+

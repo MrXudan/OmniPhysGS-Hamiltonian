@@ -1,0 +1,85 @@
+train:
+  seed: 0
+  gpu: 0
+  model_path: 'dataset/bear'
+  export_path: './outputs'
+  train_tag: 
+  epochs: 10
+  internal_epochs: 30
+  enable_train: True
+  learning_rate: 5e-5
+  lambda_l1: 0.1
+  ckpt_interval: 1
+  ckpt_epoch: -1
+  export_video: True
+  video_interval: 1
+  prompt: "a rubber bear bouncing on a surface"
+
+model:
+  network: 'knn'
+  normalize_features: True
+  hidden_size: 768
+  depth: 0 # do not use attention
+  num_heads: 8
+  mlp_ratio: 2
+  num_groups: 8192
+  group_size: 32
+
+material:
+  center: [0.5, 0.5, 0.5]
+  size: [1.0, 1.0, 1.0]
+  rho: 1000.0
+  elasticity_physicals:
+    - 'CorotatedElasticity'
+    - 'StVKElasticity'
+    # - 'SigmaElasticity'
+    # - 'VolumeElasticity'
+  plasticity_physicals:
+    - 'IdentityPlasticity'
+    - 'DruckerPragerPlasticity'
+    # - 'SigmaPlasticity'
+    # - 'VonMisesPlasticity'
+    # For saving GPU memory. May need to balance label when uncommenting. 
+  elasticity: 'neural'
+  plasticity: 'neural'
+
+render:
+  white_bg: True
+  mpm_space_vertical_upward_axis: [0, 0, 1]
+  mpm_space_viewpoint_center: [0.8, 0.7, 0.7]
+  default_camera_index: -1
+  show_hint: False
+  init_azimuthm: 170
+  init_elevation: 0
+  init_radius: 1.6
+  move_camera: False
+  delta_a: -2.4
+  delta_e: 0.8
+  delta_r: 0.0
+
+preprocessing:
+  scale_factor: 0.6
+  opacity_threshold: 0.0
+  rotation_degree: [0.0]
+  rotation_axis: [0]
+  sim_area: 
+  particle_filling: 
+
+sim:
+  num_grids: 25
+  dt: 3e-4
+  gravity: [0.0, 0.0, -9.8]
+  frames_per_stage: 20
+  num_frames: 150
+  num_skip_frames: 50
+  steps_per_frame: 10
+  clip_bound: 0.5
+  damping: 1.0
+  boundary_conditions: 
+    - type: 'surface_collider'
+      point: [1.0, 1.0, 0.02]
+      normal: [0.0, 0.0, 1.0]
+      surface: 'sticky'
+      friction: 0.0
+      start_time: 0.0
+      end_time: 1e3
