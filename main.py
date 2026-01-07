@@ -354,6 +354,7 @@ def main(cfg, args=None):
                         F=F, unselected_params=unselected_params, rotation_matrices=rotation_matrices,
                         scale_origin=scale_origin, original_mean_pos=original_mean_pos
                     )
+                    render_scale = scale_origin[selected_mask]# 用于保存当前渲染的高斯缩放比例
 
                     rendering = render_mpm_gaussian(
                         model_path=model_path, pipeline=pipeline, render_params=render_params, step=frame_id,
@@ -361,6 +362,19 @@ def main(cfg, args=None):
                         gaussians=gaussians, background=background, pos=render_pos, cov=render_cov, shs=render_shs,
                         opacity=render_opacity, rot=render_rot, screen_points=screen_points
                     )
+                    
+                    # 根据开关保存高斯参数帧
+                    if cfg.train.dump_sim and frame_id >= cfg.train.dump_sim_start and (frame_id - cfg.train.dump_sim_start) % cfg.train.dump_sim_every == 0:
+                        sim_dir = os.path.join(export_path, 'sim')
+                        pack = {
+                            'pos': render_pos,
+                            'rot': render_rot,
+                            'scale': render_scale,
+                            'opacity': render_opacity,
+                            'shs': render_shs
+                        }
+                        save_gaussian_frame(sim_dir, frame_id, pack)
+                    
                     frames.append(rendering)
 
                 # 计算 guidance（SDS）损失并进行反向传播
